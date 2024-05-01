@@ -49,28 +49,28 @@ export class DdbStack extends cdk.Stack {
    
 
 
-
 // Enable auto-scaling for the write capacity of the table
 const writeScalingTarget = new autoscaling.CfnScalableTarget(this, 'DynamoDbTableWriteScalingTarget', {
-  maxCapacity: 10,
-  minCapacity: 1,
-  resourceId: `table/${dynamoDbTable00test00nMgNz.ref}`,
-  scalableDimension: 'dynamodb:table:WriteCapacityUnits',
-  serviceNamespace: 'dynamodb',
+  maxCapacity: 10, // Set the maximum capacity to scale up to
+  minCapacity: 1, // Set the minimum capacity to ensure at least one capacity unit is provisioned
+  resourceId: `table/${dynamoDbTable00test00nMgNz.ref}`, // Specify the resource ID of the DynamoDB table
+  scalableDimension: 'dynamodb:table:WriteCapacityUnits', // Define the scalable dimension for write capacity
+  serviceNamespace: 'dynamodb', // Set the service namespace to DynamoDB
 });
 
 // Set the target utilization percentage for the write capacity
 const writeScalingPolicy = new autoscaling.CfnScalingPolicy(this, 'DynamoDbTableWriteScalingPolicy', {
-  policyName: 'DynamoDbTableWriteScalingPolicy',
-  policyType: 'TargetTrackingScaling',
-  scalingTargetId: writeScalingTarget.ref,
+  policyName: 'DynamoDbTableWriteScalingPolicy', // Specify the name of the scaling policy
+  policyType: 'TargetTrackingScaling', // Define the type of scaling policy as target tracking
+  scalingTargetId: writeScalingTarget.ref, // Reference the scalable target ID
   targetTrackingScalingPolicyConfiguration: {
-    predefinedMetricSpecification: {
-      predefinedMetricType: 'DynamoDBWriteCapacityUtilization',
-    },
-    targetValue: 50,
+  predefinedMetricSpecification: {
+  predefinedMetricType: 'DynamoDBWriteCapacityUtilization', // Specify the predefined metric type for DynamoDB write capacity utilization
+  },
+  targetValue: 50, // Set the target value for write capacity utilization
   },
 });
+
 
     dynamoDbTable00test00nMgNz.cfnOptions.deletionPolicy = cdk.CfnDeletionPolicy.RETAIN;
   }
